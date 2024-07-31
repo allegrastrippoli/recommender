@@ -14,11 +14,10 @@ def getMovieName(movieID):
         return ""
 
 def load_dataset():
-    ratings_dataset = 0
     reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
     ratings_dataset = Dataset.load_from_file( 'ml-latest-small/ratings.csv', reader=reader)
    
-    movieID_to_name = {}
+    movieID_to_name = {} # {1:'Friends', 2: ... }
     with open ('ml-latest-small/movies.csv', newline='', encoding='utf-8') as csvfile:
         movie_reader = csv.reader(csvfile)
         next(movie_reader)
@@ -26,12 +25,14 @@ def load_dataset():
             movieID = int(row[0])
             movie_name = row[1]
             movieID_to_name[movieID] = movie_name
-    
+
+
     return (ratings_dataset, movieID_to_name)
 
 dataset, movieID_to_name = load_dataset()
 trainset = dataset.build_full_trainset()
 
+# cosine similarity
 similarity_matrix = KNNBasic(sim_options={'name':'cosine', 'user_based':False}).fit(trainset).compute_similarities()
 
 test_subject = '500'
@@ -46,21 +47,18 @@ k = 20 # top-k items
 # So in order to find an user inside the trainset, you
 # need to convert their RAW ID to the INNER Id. 
 # Read here for more info https://surprise.readthedocs.io/en/stable/FAQ.html#what-are-raw-and-inner-ids
-test_subject_iid = trainset.to_inner_uid(test_subject)
-test_subject_ratings = trainset.ur[test_subject_iid]
-k_neighbors = heapq.nlargest(k, test_subject_ratings, key=lambda t: t[1])
-
+test_subject_iid = trainset.to_inner_uid(test_subject) # e.g. the raw id is '500' -> string, while the inner is 499 -> integer (used by surprise)
+test_subject_ratings = trainset.ur[test_subject_iid] # [(itemID, score), ...]
+k_neighbors = heapq.nlargest(k, test_subject_ratings, key=lambda t: t[1]) # sorted list of ratings to get the top 20
 candidates = defaultdict(float)
 
-# for each item rated by a neighbor
 for itemID, rating in k_neighbors:
     try: 
         similarities = similarity_matrix[itemID]
         for innerID, score in enumerate(similarities):
-            candidates[innerID] += score * (rating/5)
+            candidates[innerID] += score * (rating/5) # 0.98 * (4/5) 
     except:
         continue
-
 
 watched = {}
 for itemID, rating in trainset.ur[test_subject_iid]:

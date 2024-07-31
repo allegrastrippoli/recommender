@@ -8,7 +8,7 @@ class ConfigClass(object):
     """ Flask application config """
 
     SECRET_KEY = '123456789yolo'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///quick start_app.sqlite'    
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///users.sqlite'    
     SQLALCHEMY_TRACK_MODIFICATIONS = False    
     USER_APP_NAME = "Recommender"     
     USER_ENABLE_EMAIL = False     

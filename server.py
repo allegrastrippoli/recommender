@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
 # from waitress import serve 
@@ -46,32 +46,12 @@ def create_app():
 
     @app.route('/')
     def home_page():
-        return render_template_string("""
-            {% extends "flask_user_layout.html" %}
-            {% block content %}
-                <h2>Home page</h2>
-                <p><a href={{ url_for('user.register') }}>Register</a></p>
-                <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                <p><a href={{ url_for('home_page') }}>Home page</a></p>
-                <p><a href={{ url_for('member_page') }}>Member page</a></p>
-                <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
-            {% endblock %}
-            """)
+        return render_template("home_page.html")
 
     @app.route('/members')
     @login_required    
     def member_page():
-        return render_template_string("""
-            {% extends "flask_user_layout.html" %}
-            {% block content %}
-                <h2>Members page</h2>
-                <p><a href={{ url_for('user.register') }}>Register</a></p>
-                <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-                <p><a href={{ url_for('home_page') }}>Home page</a></p>
-                <p><a href={{ url_for('member_page') }}>Member page</a></p>
-                <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
-            {% endblock %}
-            """)
+        return render_template("member_page.html")
 
     return app
 

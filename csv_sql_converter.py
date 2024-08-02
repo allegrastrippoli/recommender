@@ -32,7 +32,7 @@ def create_table(filepath):
     csv_data = pd.read_csv(filepath)
     csv_data = csv_data.values.tolist()
     
-    metadata.create_all(engine)
+    Base.metadata.create_all(engine)
     
     for row in csv_data:
         movie = MovieTable(movieId=row[0], title=row[1], genres=row[2])

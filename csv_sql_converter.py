@@ -17,7 +17,7 @@ class Movie(Base):
     __tablename__ = 'movie_table'
     
     id = Column(Integer, primary_key=True)
-    movieId = Column(String)
+    movieId = Column(Integer)
     title = Column(String)
     genres = Column(String)
     
@@ -33,8 +33,8 @@ class Rating(Base):
     __tablename__ = 'rating_table'
     
     id = Column(Integer, primary_key=True)
-    userId = Column(String)
-    movieId = Column(String)
+    userId = Column(Integer)
+    movieId = Column(Integer)
     rating = Column(String)
     
     def __init__(self, userId, movieId, rating):
@@ -43,7 +43,7 @@ class Rating(Base):
         self.rating = rating
     
     def __repr__(self):
-        return f'{self.rating, self.movieId, self.rating}'
+        return f'{self.userId, self.movieId, self.rating}'
 
 
 def create_movie_table(filepath):
@@ -84,15 +84,13 @@ def select_movie():
     for row in session.execute(stmt):
         print(row)
 
-# def select_rating():
-#     stmt = select(Rating).where(Rating.userId == "1")
-#     for row in session.execute(stmt):
-#         print(row)
+def select_rating():
+    stmt = select(Rating).where(Rating.userId == "1")
+    for row in session.execute(stmt):
+        print(row)
 
 
-# create_movie_table("ml-latest-small/movies.csv")
-# create_rating_table("ml-latest-small/ratings.csv")
-# insert_rating("611", "1", "1")
-
-
+create_movie_table("ml-latest-small/movies.csv")
+create_rating_table("ml-latest-small/ratings.csv")
+select_rating()
 

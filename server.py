@@ -1,6 +1,9 @@
 from flask import Flask, render_template
+from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
+from csv_sql_converter import select_random_movies, select_user
+
 # from waitress import serve 
 
 
@@ -8,8 +11,10 @@ class ConfigClass(object):
     """ Flask application config """
 
     SECRET_KEY = '123456789yolo'
+
     SQLALCHEMY_DATABASE_URI = 'sqlite:///users.sqlite'    
-    SQLALCHEMY_TRACK_MODIFICATIONS = False    
+    SQLALCHEMY_TRACK_MODIFICATIONS = False   
+ 
     USER_APP_NAME = "Recommender"     
     USER_ENABLE_EMAIL = False     
     USER_ENABLE_USERNAME = True   
@@ -44,14 +49,17 @@ def create_app():
 
     user_manager = UserManager(app, db, User)
 
-    @app.route('/')
-    def home_page():
-        return render_template("home_page.html")
 
-    @app.route('/members')
+    @app.route('/')
     @login_required    
     def member_page():
-        return render_template("member_page.html")
+        if current_user.is_authenticated:
+            id = current_user.id
+            if select_user(int(id)):
+                return render_template("recommendations.html")
+        
+        movies = select_random_movies()
+        return render_template("coldstart.html", movies=movies)
 
     return app
 

@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy.sql.expression import func
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import select
@@ -11,6 +12,7 @@ session = Session()
 # Base: A class that links database tables with python classes
 # MetaData: A collection of Table objects and their associated schema constructs
 # The MetaData is accessed via the Base class
+
 Base = declarative_base()
 
 class Movie(Base):
@@ -79,18 +81,19 @@ def insert_rating(userId, movieId, rating):
     session.add(rating)
     session.commit()
 
-def select_movie():
-    stmt = select(Movie).where(Movie.movieId == "193585")
-    for row in session.execute(stmt):
-        print(row)
+def select_random_movies():
+    stmt = select(Movie).order_by(func.random()).limit(20)
+    result = session.execute(stmt).scalars().all()
+    return result
 
-def select_rating():
-    stmt = select(Rating).where(Rating.userId == "1")
-    for row in session.execute(stmt):
-        print(row)
+def select_user(userId: Integer):
+    stmt = select(Rating).where(Rating.userId == userId)
+    for _ in session.execute(stmt):
+        return True
+    return False
 
+# create_movie_table("ml-latest-small/movies.csv")
+# create_rating_table("ml-latest-small/ratings.csv")
 
-create_movie_table("ml-latest-small/movies.csv")
-create_rating_table("ml-latest-small/ratings.csv")
-select_rating()
-
+if __name__=='__main__':
+    pass

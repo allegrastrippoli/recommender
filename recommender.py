@@ -29,6 +29,7 @@ def load_dataset():
 
     return (ratings_dataset, movieID_to_name)
 
+
 dataset, movieID_to_name = load_dataset()
 trainset = dataset.build_full_trainset()
 
@@ -64,6 +65,8 @@ watched = {}
 for itemID, rating in trainset.ur[test_subject_iid]:
     watched[itemID] = 1
 
+
+
 recommendations = []
 
 position = 0 
@@ -75,3 +78,20 @@ for itemID, rating_sum in sorted(candidates.items(), key=itemgetter(1), reverse=
 
 for rec in recommendations:
     print('Movie: ', rec)
+
+def get_top_k_recommendations(userId):
+    return  ['About Adam (2000)',
+'Night in the Life of Jimmy Reardon, A (1988)',
+'Liberty Heights (1999)',
+'Who Is Cletis Tout? (2001)',
+'Business of Strangers, The (2001)',
+'Auto Focus (2002)',
+'Evangelion: 1.0 You Are (Not) Alone (Evangerion shin gekijôban: Jo) (2007)',
+'Double Team (1997)',
+'King of New York (1990)',
+'Manufactured Landscapes (2006)',
+'Evangelion: 2.0 You Can (Not) Advance (Evangerion shin gekijôban: Ha) (2009)']
+
+
+if __name__=='__main__':
+    pass

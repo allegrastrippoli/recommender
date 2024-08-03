@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
-from csv_sql_converter import select_random_movies, select_user
+from repository import select_random_movies, select_user, insert_rating
+from recommender import get_top_k_recommendations
 
 # from waitress import serve 
 
@@ -49,17 +50,30 @@ def create_app():
 
     user_manager = UserManager(app, db, User)
 
+    @app.route('/get_recommendations', methods=['POST'])
+    @login_required    
+    def recommendations():
+        if request.method == "POST":
+            selected_movie_ids = request.form.getlist('selected_movies')
+            for movie in selected_movie_ids:
+                insert_rating(int(current_user.id), int(movie), "5.0")
+                print('Done inserting user ratings.')
+                # recs = get_top_k_recommendations(int(current_user.id))
+                # print(recs)
+                # return render_template("recommendations.html", recs=recs)
+            return "Error"
+        
 
     @app.route('/')
     @login_required    
-    def member_page():
-        if current_user.is_authenticated:
-            id = current_user.id
-            if select_user(int(id)):
-                return render_template("recommendations.html")
+    def init():
+        # if current_user.is_authenticated:
+        #     id = current_user.id
+        #     if select_user(int(id)):
+        #         return render_template("recommendations.html")
         
         movies = select_random_movies()
-        return render_template("coldstart.html", movies=movies)
+        return render_template("start.html", movies=movies)
 
     return app
 

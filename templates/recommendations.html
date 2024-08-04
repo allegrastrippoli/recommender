@@ -4,7 +4,9 @@
     <p><a href="{{ url_for('user.register') }}">Register</a></p>
     <p><a href="{{ url_for('user.login') }}">Sign in</a></p>
     <p><a href="{{ url_for('user.logout') }}">Sign out</a></p>
+    {% for rec in recs %}
+    <p>{{ rec }}</p>
+    {% endfor %}
+    <p>"Hello"</p>
 {% endblock %}
-{% for rec in recs %}
-<p>{{ rec }}</p>
-{% endfor %}
+

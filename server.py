@@ -58,9 +58,8 @@ def create_app():
             for movie in selected_movie_ids:
                 insert_rating(int(current_user.id), int(movie), "5.0")
                 print('Done inserting user ratings.')
-                # recs = get_top_k_recommendations(int(current_user.id))
-                # print(recs)
-                # return render_template("recommendations.html", recs=recs)
+                recs = get_top_k_recommendations(int(current_user.id))
+                return render_template("recommendations.html", recs=recs)
             return "Error"
         
 

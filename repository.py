@@ -1,11 +1,15 @@
 import pandas as pd
 import csv
+import requests
 from sqlalchemy.sql.expression import func
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import select
+import re
 
-engine = create_engine('sqlite:///recsys.sqlite')
+api_key = '4994ff47'
+
+engine = create_engine('sqlite:///movies.sqlite')
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -23,14 +27,16 @@ class Movie(Base):
     movieId = Column(Integer)
     title = Column(String)
     genres = Column(String)
+    image_url = Column(String) 
     
-    def __init__(self, movieId, title, genres):
+    def __init__(self, movieId, title, genres, image_url):
         self.movieId = movieId
         self.title = title
         self.genres = genres
+        self.image_url = image_url
     
     def __repr__(self):
-        return f'{self.movieId, self.title, self.genres}'
+        return f'{self.movieId, self.title, self.genres, self.image_url}'
     
 class Rating(Base): 
     __tablename__ = 'rating_table'
@@ -49,6 +55,17 @@ class Rating(Base):
         return f'{self.userId, self.movieId, self.rating}'
 
 
+def fetch_movie_image(title):
+    url = f'http://www.omdbapi.com/?apikey={api_key}&t={title}'
+    response = requests.get(url)
+    data = response.json()
+    return data.get('Poster')
+
+def remove_year_from_title(title):
+    pattern = r'\s*\(\d{4}\)'
+    title = re.sub(pattern, '', title)
+    return title.strip()
+
 def create_movie_table(filepath):
     csv_data = pd.read_csv(filepath)
     csv_data = csv_data.values.tolist()
@@ -56,7 +73,9 @@ def create_movie_table(filepath):
     Base.metadata.create_all(engine)
     
     for row in csv_data:
-        movie = Movie(movieId=row[0], title=row[1], genres=row[2])
+        newtitle = remove_year_from_title(row[1])
+        image_url = fetch_movie_image(newtitle)
+        movie = Movie(movieId=row[0], title=row[1], genres=row[2], image_url=image_url )
         session.add(movie)
     
     session.commit()
@@ -109,8 +128,8 @@ def select_user(userId: Integer):
         return True
     return False
 
-# create_movie_table("ml-latest-small/movies.csv")
-# create_rating_table("ml-latest-small/ratings.csv")
 
 if __name__=='__main__':
-    pass
+    create_movie_table("ml-latest-small/movies.csv")
+    create_rating_table("ml-latest-small/ratings.csv")
+

@@ -6,6 +6,7 @@
 
 <form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
     {% for movie in movies %}
+    <p><img src="{{ movie['image_url'] }}"></p>
     <p>{{ movie['title'] }} <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }}"></p>
     <p>{{ movie['genres'] }}</p>
     {% endfor %}

@@ -5,13 +5,10 @@ from flask_user import login_required, UserManager, UserMixin
 from repository import select_random_movies, select_user, insert_rating
 from recommender import Recommender
 
-# from waitress import serve 
-
-
 class ConfigClass(object):
     """ Flask application config """
 
-    SECRET_KEY = '123456789yolo'
+    SECRET_KEY = 'yolo'
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///users.sqlite'    
     SQLALCHEMY_TRACK_MODIFICATIONS = False   
@@ -48,32 +45,39 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+
     user_manager = UserManager(app, db, User)
 
     app.recommender = Recommender()
 
+    # @app.route('/refresh_movies')
+    # @login_required
+    # def refresh_movies():
+    #     selected_movies = request.form.getlist('selected_movies')
+    #     movies = select_random_movies()
+    #     return render_template("start.html", selected_movies=selected_movies, movies=movies)
+
     @app.route('/get_recommendations', methods=['POST'])
     @login_required    
-    def recommendations():
+    def get_recommendations():
         if request.method == "POST":
-            selected_movie_ids = request.form.getlist('selected_movies')
-            for movie in selected_movie_ids:
-                insert_rating(int(current_user.id), int(movie), "5.0")
-                print('Done inserting user ratings.')
-                recs = app.recommender.get_top_k_recommendations(str(current_user.id))
-               
-                return render_template("recommendations.html", recs=recs)
-            return "Error"
+            selected_movies= request.form.getlist('selected_movies')
+            insert_rating(int(current_user.id), selected_movies, "5.0")
+            print('Done inserting user ratings.')
+            recs = app.recommender.get_top_k_recommendations(str(current_user.id))
+            return render_template("recommendations.html", recs=recs)
         
 
     @app.route('/')
     @login_required    
     def init():
-        # if current_user.is_authenticated:
-        #     id = current_user.id
-        #     if select_user(int(id)):
-        #         return render_template("recommendations.html")
-        
+        id = current_user.id
+        # if select_user(int(id)):
+        #     recs = app.recommender.get_top_k_recommendations(str(id))
+        #     return render_template("recommendations.html", recs=recs)
+        # else:
+        #     movies = select_random_movies()
+        #     return render_template("start.html", movies=movies)
         movies = select_random_movies()
         return render_template("start.html", movies=movies)
 

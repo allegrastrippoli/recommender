@@ -1,14 +1,28 @@
 {% extends "flask_user_layout.html" %}
 {% block content %}
-<h2>Home page</h2>
 <p><a href="{{ url_for('user.register') }}">Register</a></p>
 <p><a href="{{ url_for('user.login') }}">Sign in</a></p>
 <p><a href="{{ url_for('user.logout') }}">Sign out</a></p>
-<form action="/get_recommendations" method="post">
+
+<form action="/refresh_movies" method="post">
+    <button type="submit">`Refresh movies!</button>
+</form>
+
+<form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
     {% for movie in movies %}
-    <p>{{ movie['title'] }} <input type="checkbox" name="selected_movies" value="{{ movie['id'] }}"></p>
+    <p>{{ movie['title'] }} <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }}"></p>
     <p>{{ movie['genres'] }}</p>
     {% endfor %}
     <input type="submit" value="Submit">
 </form>
+<script>
+    function validateForm() {
+        var checkboxes = document.querySelectorAll('input[name="selected_movies"]:checked');
+        if (checkboxes.length < 10) {
+            alert("Please select at least 10 movies.");
+            return false;
+        }
+        return true;
+    }
+</script>
 {% endblock %}

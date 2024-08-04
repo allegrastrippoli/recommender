@@ -76,9 +76,11 @@ def create_rating_table(filepath):
 
     print(session.query(Rating).count())
 
-def insert_rating(userId, movieId, rating):
-    rating = Rating(userId=userId, movieId=movieId, rating=rating)
-    session.add(rating)
+def insert_rating(userId: int, selected_movies: list, rating: str):
+    for movieId in selected_movies:
+        print('Adding ratings to the current session...')
+        newrating = Rating(userId=userId, movieId=int(movieId), rating=rating)
+        session.add(newrating)
     session.commit()
 
 def select_random_movies():

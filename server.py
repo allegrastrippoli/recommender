@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
 from repository import select_random_movies, select_user, insert_rating
-from recommender import Recommender
+from recommender import get_top_k_recommendations
 
 class ConfigClass(object):
     """ Flask application config """
@@ -45,17 +45,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-
     user_manager = UserManager(app, db, User)
-
-    app.recommender = Recommender()
-
-    # @app.route('/refresh_movies')
-    # @login_required
-    # def refresh_movies():
-    #     selected_movies = request.form.getlist('selected_movies')
-    #     movies = select_random_movies()
-    #     return render_template("start.html", selected_movies=selected_movies, movies=movies)
 
     @app.route('/get_recommendations', methods=['POST'])
     @login_required    
@@ -64,7 +54,7 @@ def create_app():
             selected_movies= request.form.getlist('selected_movies')
             insert_rating(int(current_user.id), selected_movies, "5.0")
             print('Done inserting user ratings.')
-            recs = app.recommender.get_top_k_recommendations(str(current_user.id))
+            recs = get_top_k_recommendations(str(current_user.id))
             return render_template("recommendations.html", recs=recs)
         
 

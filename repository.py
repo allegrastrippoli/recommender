@@ -1,4 +1,5 @@
 import pandas as pd
+import csv
 from sqlalchemy.sql.expression import func
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -76,12 +77,26 @@ def create_rating_table(filepath):
 
     print(session.query(Rating).count())
 
-def insert_rating(userId: int, selected_movies: list, rating: str):
+
+def update_csv(userId: int, selected_movies: list, rating: str):
+    with open('ml-latest-small/ratings.csv', 'a', newline='') as csvfile_out:
+        writer = csv.writer(csvfile_out)
+    
+        for movieId in selected_movies:
+            row = [userId, movieId, rating, "None"]
+            writer.writerow(row)
+
+def update_db(userId: int, selected_movies: list, rating: str):
     for movieId in selected_movies:
         print('Adding ratings to the current session...')
         newrating = Rating(userId=userId, movieId=int(movieId), rating=rating)
         session.add(newrating)
     session.commit()
+
+def insert_rating(userId: int, selected_movies: list, rating: str):
+    # TODO: remove csv pls
+    update_csv(userId, selected_movies, rating)
+    update_db(userId, selected_movies, rating)
 
 def select_random_movies():
     stmt = select(Movie).order_by(func.random()).limit(20)

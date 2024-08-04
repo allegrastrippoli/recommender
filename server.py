@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
 from repository import select_random_movies, select_user, insert_rating
-from recommender import get_top_k_recommendations
+from recommender import Recommender
 
 # from waitress import serve 
 
@@ -50,6 +50,8 @@ def create_app():
 
     user_manager = UserManager(app, db, User)
 
+    app.recommender = Recommender()
+
     @app.route('/get_recommendations', methods=['POST'])
     @login_required    
     def recommendations():
@@ -58,7 +60,8 @@ def create_app():
             for movie in selected_movie_ids:
                 insert_rating(int(current_user.id), int(movie), "5.0")
                 print('Done inserting user ratings.')
-                recs = get_top_k_recommendations(int(current_user.id))
+                recs = app.recommender.get_top_k_recommendations(str(current_user.id))
+               
                 return render_template("recommendations.html", recs=recs)
             return "Error"
         
@@ -78,5 +81,6 @@ def create_app():
 
 
 if __name__=='__main__':
+
     app = create_app()
     app.run(host='0.0.0.0', port=8000, debug=True)

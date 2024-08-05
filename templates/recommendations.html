@@ -1,8 +1,5 @@
-{% extends "flask_user_layout.html" %}
+{% extends "base.html" %}
 {% block content %}
-    <p><a href="{{ url_for('user.register') }}">Register</a></p>
-    <p><a href="{{ url_for('user.login') }}">Sign in</a></p>
-    <p><a href="{{ url_for('user.logout') }}">Sign out</a></p>
     {% for rec in recs %}
     <p><img src="{{ rec['image_url'] }}"></p>
     <p>{{ rec['title'] }}</p>

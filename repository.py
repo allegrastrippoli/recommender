@@ -53,6 +53,58 @@ class Rating(Base):
     
     def __repr__(self):
         return f'{self.userId, self.movieId, self.rating}'
+
+
+def check_movie_image(movieId: str):
+    stmt = select(Movie).where(Movie.movieId == movieId)
+    result = session.execute(stmt).first()
+    try:
+        if result[0].image_url is None:
+            return True
+        return False
+    except:
+        Exception('NoneType obj found')
+
+def remove_year_from_title(title):
+    pattern = r'\s*\(\d{4}\)'
+    title = re.sub(pattern, '', title)
+    return title.strip()
+
+def fetch_movie_image(title):
+    url = f'http://www.omdbapi.com/?apikey={api_key}&t={title}'
+    response = requests.get(url)
+    data = response.json()
+    if 'Error' in data.get('Response') or 'False' in data.get('Response'):
+        print(data)
+        return 'Response Error'
+    return data.get('Poster')
+
+def update_movie(movieId, url, commit_counter):
+     movie = session.execute(select(Movie).filter_by(movieId=movieId)).scalar_one()
+     movie.image_url = url
+     print('Udating image_url...')
+     if commit_counter >= 100:
+        session.commit()
+
+def retrieve_images():
+    commit_counter = 0 
+    
+    with open('ml-latest-small/movies.csv', mode='r', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader, None)  
+        for row in reader:
+            movieId, title, _ = row
+            if check_movie_image(movieId):
+                newtitle = remove_year_from_title(title)
+                image_url = fetch_movie_image(newtitle)
+                if not 'Response Error' in image_url:
+                    commit_counter += 1 
+                    update_movie(movieId, image_url, commit_counter)
+                    if commit_counter >= 100:
+                        commit_counter = 0 
+                        
+        if commit_counter > 0:
+            session.commit()
     
 def select_movie_from_title(titles: list):
     result = []
@@ -65,22 +117,6 @@ def select_random_movies():
     stmt = select(Movie).order_by(func.random()).limit(20)
     result = session.execute(stmt).scalars().all()
     return result
-
-def update_movie(movieTitle, url):
-     movie = session.execute(select(Movie).filter_by(title=movieTitle)).scalar_one()
-     movie.image_url = url
-     session.commit()
-
-def fetch_movie_image(title):
-    url = f'http://www.omdbapi.com/?apikey={api_key}&t={title}'
-    response = requests.get(url)
-    data = response.json()
-    return data.get('Poster')
-
-def remove_year_from_title(title):
-    pattern = r'\s*\(\d{4}\)'
-    title = re.sub(pattern, '', title)
-    return title.strip()
 
 def create_movie_table(filepath):
     csv_data = pd.read_csv(filepath)
@@ -169,7 +205,4 @@ def delete_user_rating(id: int):
 if __name__=='__main__':
     # create_movie_table("ml-latest-small/movies.csv")
     # create_rating_table("ml-latest-small/ratings.csv")
-    pass
-
-
-
+    retrieve_images()

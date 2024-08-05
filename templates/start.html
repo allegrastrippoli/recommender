@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
+
+<div class="album py-5 bg-body-tertiary"></div>
+<div class="grid-container">
+    {% for movie in movies %}
+    <div class="col">
+        <div class="card shadow-sm">
+        <div class="grid-item">Hello!</div>
+        <div class="card-body">
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                 </div>
+              <small class="text-body-secondary">9 mins</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% endfor %}
+</div>
+
+
+<!-- <form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
     {% for movie in movies %}
     <p><img src="{{ movie['image_url'] }}"></p>
     <p>{{ movie['title'] }} <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }}"></p>
@@ -17,5 +41,5 @@
         }
         return true;
     }
-</script>
+</script> -->
 {% endblock %}

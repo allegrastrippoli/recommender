@@ -30,6 +30,22 @@
             float: none;
             margin: 0 auto;
         }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            /* width: auto;
+            height: 300px;   */
+        }
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+             height: 200px; 
+        }
+        
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -61,6 +77,8 @@
         </ul>
         </header>
       </div>
+
+
 
 
 

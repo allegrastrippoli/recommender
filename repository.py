@@ -54,6 +54,13 @@ class Rating(Base):
     def __repr__(self):
         return f'{self.userId, self.movieId, self.rating}'
     
+def select_movie_from_title(titles: list):
+    result = []
+    for title in titles:
+        stmt = select(Movie).where(Movie.title == title)
+        result.append(session.execute(stmt).scalars().first())
+    return result
+    
 def select_random_movies():
     stmt = select(Movie).order_by(func.random()).limit(20)
     result = session.execute(stmt).scalars().all()
@@ -141,7 +148,6 @@ def check_if_user_has_ratings(userId: int):
         return False
     return True
 
-
 def delete_user_ratings(from_id: int, to_id: int):
     """
     id: database id, NOT userId
@@ -163,8 +169,7 @@ def delete_user_rating(id: int):
 if __name__=='__main__':
     # create_movie_table("ml-latest-small/movies.csv")
     # create_rating_table("ml-latest-small/ratings.csv")
-    delete_user_rating(100868)
-    delete_user_rating(100869)
+    pass
 
 
 

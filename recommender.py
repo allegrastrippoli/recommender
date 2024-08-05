@@ -29,13 +29,11 @@ def load_dataset():
     reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
     return Dataset.load_from_file( 'ml-latest-small/ratings.csv', reader=reader)
     
-    # When using Surprise, there are RAW and INNER IDs.
-    # Raw IDs are the IDs, you use when creating the trainset. 
-    # The raw ID will be converted to an unique integer Surprise can more easily manipulate  for computations.
-    #
-    # So in order to find an user inside the trainset, you need to convert their RAW ID to the INNER Id. 
-    # Read here for more info https://surprise.readthedocs.io/en/stable/FAQ.html#what-are-raw-and-inner-ids
-    
+# When using Surprise, there are Raw and Inner IDs.
+# Raw IDs are the IDs to create the trainset. 
+# Raw Is will be converted to unique integers that Surprise can manipulate more easily for computations.
+# So in order to find an user inside the trainset, you need to convert its Raw ID to the Inner Id. 
+# Read here for more info https://surprise.readthedocs.io/en/stable/FAQ.html#what-are-raw-and-inner-ids
 def get_top_k_recommendations(user_rid: str, k=20):
     movieID_to_name = get_movies_dict()
     dataset = load_dataset()

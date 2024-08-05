@@ -53,7 +53,16 @@ class Rating(Base):
     
     def __repr__(self):
         return f'{self.userId, self.movieId, self.rating}'
+    
+def select_random_movies():
+    stmt = select(Movie).order_by(func.random()).limit(20)
+    result = session.execute(stmt).scalars().all()
+    return result
 
+def update_movie(movieTitle, url):
+     movie = session.execute(select(Movie).filter_by(title=movieTitle)).scalar_one()
+     movie.image_url = url
+     session.commit()
 
 def fetch_movie_image(title):
     url = f'http://www.omdbapi.com/?apikey={api_key}&t={title}'
@@ -96,6 +105,21 @@ def create_rating_table(filepath):
 
     print(session.query(Rating).count())
 
+def check_user_rating(userId: int, movieId: int):
+    # instead of this work around, the primary key should be <userId, movieId>
+    stmt = select(Rating).where(Rating.userId == userId).where(Rating.movieId == movieId)
+    result = session.execute(stmt).first()
+    if result is None:
+        return True
+    return False
+
+def update_db(userId: int, selected_movies: list, rating: str):
+    for movieId in selected_movies:
+        if check_user_rating(userId, int(movieId)):
+            print('Adding ratings to the current session...')
+            newrating = Rating(userId=userId, movieId=int(movieId), rating=rating)
+            session.add(newrating)
+    session.commit()
 
 def update_csv(userId: int, selected_movies: list, rating: str):
     with open('ml-latest-small/ratings.csv', 'a', newline='') as csvfile_out:
@@ -105,31 +129,42 @@ def update_csv(userId: int, selected_movies: list, rating: str):
             row = [userId, movieId, rating, "None"]
             writer.writerow(row)
 
-def update_db(userId: int, selected_movies: list, rating: str):
-    for movieId in selected_movies:
-        print('Adding ratings to the current session...')
-        newrating = Rating(userId=userId, movieId=int(movieId), rating=rating)
-        session.add(newrating)
-    session.commit()
-
 def insert_rating(userId: int, selected_movies: list, rating: str):
-    # TODO: remove csv pls
+    # TODO: remove csv, only db should be updated!
     update_csv(userId, selected_movies, rating)
     update_db(userId, selected_movies, rating)
 
-def select_random_movies():
-    stmt = select(Movie).order_by(func.random()).limit(20)
-    result = session.execute(stmt).scalars().all()
-    return result
-
-def select_user(userId: Integer):
+def check_if_user_has_ratings(userId: int):
     stmt = select(Rating).where(Rating.userId == userId)
-    for _ in session.execute(stmt):
-        return True
-    return False
+    result = session.execute(stmt).first()
+    if result is None:
+        return False
+    return True
+
+
+def delete_user_ratings(from_id: int, to_id: int):
+    """
+    id: database id, NOT userId
+    """
+    for id in range(from_id, to_id):
+        rating = session.get(Rating, id)
+        session.delete(rating)
+    session.commit()
+
+def delete_user_rating(id: int):
+    """
+    id: database id, NOT userId
+    """
+    rating = session.get(Rating, id)
+    session.delete(rating)
+    session.commit()
 
 
 if __name__=='__main__':
-    create_movie_table("ml-latest-small/movies.csv")
-    create_rating_table("ml-latest-small/ratings.csv")
+    # create_movie_table("ml-latest-small/movies.csv")
+    # create_rating_table("ml-latest-small/ratings.csv")
+    delete_user_rating(100868)
+    delete_user_rating(100869)
+
+
 

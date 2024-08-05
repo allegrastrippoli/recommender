@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
-from repository import select_random_movies, select_user, insert_rating
+from repository import select_random_movies, check_if_user_has_ratings, insert_rating
 from recommender import get_top_k_recommendations
 
 class ConfigClass(object):
@@ -62,14 +62,12 @@ def create_app():
     @login_required    
     def init():
         id = current_user.id
-        # if select_user(int(id)):
-        #     recs = app.recommender.get_top_k_recommendations(str(id))
-        #     return render_template("recommendations.html", recs=recs)
-        # else:
-        #     movies = select_random_movies()
-        #     return render_template("start.html", movies=movies)
-        movies = select_random_movies()
-        return render_template("start.html", movies=movies)
+        if check_if_user_has_ratings(int(id)):
+            recs = get_top_k_recommendations(str(id))
+            return render_template("recommendations.html", recs=recs)
+        else:
+            movies = select_random_movies()
+            return render_template("start.html", movies=movies)
 
     return app
 

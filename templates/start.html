@@ -3,35 +3,30 @@
 
 <div class="album py-5 bg-body-tertiary"></div>
 <div class="grid-container">
+    
     {% for movie in movies %}
+    <form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
     <div class="col">
         <div class="card shadow-sm">
-        <div class="grid-item">Hello!</div>
+        <!-- <img src="{{ movie['image_url'] }}"> -->
+        <div class="grid-item"><img src="#"></div>
         <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <p class="card-text">{{ movie['title'] }}</p>
             <div class="d-flex justify-content-between align-items-center">
               <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">{{ movie['genres'] }}</button>
                  </div>
-              <small class="text-body-secondary">9 mins</small>
+              <small class="text-body-secondary"><input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }}"></small>
                 </div>
             </div>
         </div>
     </div>
-    
+</form>
     {% endfor %}
 </div>
 
+   <div> <input type="submit" value="Submit"> </div>
 
-<!-- <form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
-    {% for movie in movies %}
-    <p><img src="{{ movie['image_url'] }}"></p>
-    <p>{{ movie['title'] }} <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }}"></p>
-    <p>{{ movie['genres'] }}</p>
-    {% endfor %}
-    <input type="submit" value="Submit">
-</form>
 <script>
     function validateForm() {
         var checkboxes = document.querySelectorAll('input[name="selected_movies"]:checked');
@@ -41,5 +36,5 @@
         }
         return true;
     }
-</script> -->
+</script>
 {% endblock %}

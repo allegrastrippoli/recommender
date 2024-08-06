@@ -1,9 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for rec in recs %}
-    <p><img src="{{ rec['image_url'] }}"></p>
-    <p>{{ rec['title'] }}</p>
-    <p>{{ rec['genres'] }}</p>
-    {% endfor %}
-{% endblock %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="grid-container">
+        {% for rec in recs %}
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="grid-item">
+                    {% if rec['image_url'] %}
+                    <img class="bd-placeholder-img card-img-top" preserveAspectRatio="xMidYMid slice" focusable="false"
+                        src="{{ rec['image_url'] }}">
+                    {% else %}
+                    <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" width="262px" height="387px"
+                        role="img" aria-label="Placeholder: Thumbnail" focusable="false">
+                        <title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c" />
+                        <text x="40%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ rec['title'] }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{ rec['genres']
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+</div>
 
+
+</div>
+
+{% endblock %}

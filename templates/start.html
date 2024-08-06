@@ -3,13 +3,15 @@
 
 <div class="album py-5 bg-body-tertiary"></div>
 <div class="grid-container">
+
+
+    <!-- <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg> -->
     
     {% for movie in movies %}
     <form action="/get_recommendations" method="post"  onsubmit="return validateForm()">
     <div class="col">
         <div class="card shadow-sm">
-        <!-- <img src="{{ movie['image_url'] }}"> -->
-        <div class="grid-item"><img src="#"></div>
+        <div class="grid-item"><img class="bd-placeholder-img card-img-top" width="100%" height="225" preserveAspectRatio="xMidYMid slice"  focusable="false" src="{{ movie['image_url'] }}"></div>
         <div class="card-body">
             <p class="card-text">{{ movie['title'] }}</p>
             <div class="d-flex justify-content-between align-items-center">

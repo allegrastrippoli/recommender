@@ -87,6 +87,7 @@ def update_movie(movieId, url, commit_counter):
         session.commit()
 
 def retrieve_images():
+    number_of_requests = 0
     commit_counter = 0 
     
     with open('ml-latest-small/movies.csv', mode='r', newline='') as csvfile:
@@ -97,6 +98,11 @@ def retrieve_images():
             if check_movie_image(movieId):
                 newtitle = remove_year_from_title(title)
                 image_url = fetch_movie_image(newtitle)
+                number_of_requests += 1
+                if number_of_requests == 1000:
+                            if commit_counter > 0:
+                                session.commit()
+                                return
                 if not 'Response Error' in image_url:
                     commit_counter += 1 
                     update_movie(movieId, image_url, commit_counter)
@@ -156,26 +162,28 @@ def check_user_rating(userId: int, movieId: int):
         return True
     return False
 
-def update_db(userId: int, selected_movies: list, rating: str):
-    for movieId in selected_movies:
+def update_db(userId: int, selected_movies: list):
+    for movie in selected_movies:
+        movieId, rating = movie.split(',')
         if check_user_rating(userId, int(movieId)):
             print('Adding ratings to the current session...')
             newrating = Rating(userId=userId, movieId=int(movieId), rating=rating)
             session.add(newrating)
     session.commit()
 
-def update_csv(userId: int, selected_movies: list, rating: str):
+def update_csv(userId: int, selected_movies: list):
     with open('ml-latest-small/ratings.csv', 'a', newline='') as csvfile_out:
         writer = csv.writer(csvfile_out)
     
-        for movieId in selected_movies:
+        for movie in selected_movies:
+            movieId, rating = movie.split(',')
             row = [userId, movieId, rating, "None"]
             writer.writerow(row)
 
-def insert_rating(userId: int, selected_movies: list, rating: str):
+def insert_rating(userId: int, selected_movies: list):
     # TODO: remove csv, only db should be updated!
-    update_csv(userId, selected_movies, rating)
-    update_db(userId, selected_movies, rating)
+    update_csv(userId, selected_movies)
+    update_db(userId, selected_movies)
 
 def check_if_user_has_ratings(userId: int):
     stmt = select(Rating).where(Rating.userId == userId)

@@ -9,11 +9,10 @@
                 <div class="card shadow-sm">
                     <div class="grid-item">
                         {% if movie['image_url'] %}
-                        <img class="bd-placeholder-img card-img-top" preserveAspectRatio="xMidYMid slice" focusable="false"
-                            src="{{ movie['image_url'] }}">
+                        <img class="bd-placeholder-img card-img-top" width="356px" height="530px"
+                            focusable="false" src="{{ movie['image_url'] }}">
                         {% else %}
-                        <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" width="262px" height="387px"
-                            role="img" aria-label="Placeholder: Thumbnail" focusable="false">
+                        <svg class="bd-placeholder-img card-img-top" xmlns="http://www.w3.org/2000/svg" width="356px" height="530px"role="img" aria-label="Placeholder: Thumbnail" focusable="false">
                             <title>Placeholder</title>
                             <rect width="100%" height="100%" fill="#55595c" />
                             <text x="40%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
@@ -25,11 +24,25 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{ movie['genres']
                                 }}</span>
-                            <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }}">
+                         
+                            <div class=" d-flex justify-content-center mt-5">
+                                <div class=" text-center mb-5">
+                                    <div class="rating">
+                                        <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }},5" id="{{ movie['movieId'] }}5"><label for="{{ movie['movieId'] }}5">☆</label>
+                                        <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }},4" id="{{ movie['movieId'] }}4"><label for="{{ movie['movieId'] }}4">☆</label>
+                                        <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }},3" id="{{ movie['movieId'] }}3"><label for="{{ movie['movieId'] }}3">☆</label>
+                                        <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }},2" id="{{ movie['movieId'] }}2"><label for="{{ movie['movieId'] }}2">☆</label>
+                                        <input type="checkbox" name="selected_movies" value="{{ movie['movieId'] }},1" id="{{ movie['movieId'] }}1"><label for="{{ movie['movieId'] }}1">☆</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
-                    </div>
-                    </div>
+                </div>
+            </div>
             {% endfor %}
 
         </div>
@@ -37,18 +50,8 @@
         <div class="col-lg-6 col-xxl-4 my-5 mx-auto">
             <div class="d-grid gap-2">
                 <button class="btn btn-primary btn-margins" type="submit">Submit</button>
-                </div>
-                </div>
+            </div>
+        </div>
     </div>
-    </form>
-<script>
-    function validateForm() {
-        var checkboxes = document.querySelectorAll('input[name="selected_movies"]:checked');
-        if (checkboxes.length < 10) {
-            alert("Please select at least 10 movies.");
-            return false;
-        }
-        return true;
-    }
-</script>
+</form>
 {% endblock %}

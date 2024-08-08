@@ -1,11 +1,14 @@
-from surprise import Dataset
+from surprise import accuracy, Dataset
 from surprise import Reader
 from surprise import KNNBasic
-
-from collections import defaultdict
-from operator import itemgetter
-import heapq
+import random
 import csv
+
+def test_accuracy(algo, trainset):
+    testset = trainset.build_testset()
+    predictions = algo.test(testset)
+    accuracy.rmse(predictions, verbose=True) 
+   
 
 def get_movie_name(movieID, movieID_to_name):
         if int(movieID) in movieID_to_name:
@@ -29,45 +32,40 @@ def load_dataset():
     reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
     return Dataset.load_from_file( 'ml-latest-small/ratings.csv', reader=reader)
     
-# When using Surprise, there are Raw and Inner IDs.
-# Raw IDs are the IDs to create the trainset. 
-# Raw Is will be converted to unique integers that Surprise can manipulate more easily for computations.
-# So in order to find an user inside the trainset, you need to convert its Raw ID to the Inner Id. 
-# Read here for more info https://surprise.readthedocs.io/en/stable/FAQ.html#what-are-raw-and-inner-ids
+
 def get_top_k_recommendations(user_rid: str, k=20):
     movieID_to_name = get_movies_dict()
     dataset = load_dataset()
-    trainset = dataset.build_full_trainset()
-    similarity_matrix = KNNBasic(sim_options={'name': 'cosine', 'user_based': False}).fit(trainset).compute_similarities()
+    trainset = dataset.build_full_trainset() # the trainset is built from the whole dataset 
+    algo = KNNBasic(sim_options={'name': 'cosine', 'user_based': False})
+    algo.fit(trainset)
 
-    user_iid = trainset.to_inner_uid(user_rid) # e.g. the raw id is '500' -> string, while the inner is 499 -> integer (used by surprise)
-    user_ratings =  trainset.ur[user_iid] # [(itemID, score), ...]
-    k_neighbors = heapq.nlargest(k, user_ratings, key=lambda t: t[1]) # sorted list of ratings to get the top 20
-    candidates = defaultdict(float)
+    predictions = {}
 
-    for itemID, rating in k_neighbors:
-        try: 
-            similarities = similarity_matrix[itemID]
-            for innerID, score in enumerate(similarities):
-                candidates[innerID] += score * (rating/5) # 0.98 * (4/5) 
-        except:
-            continue
+    user_iid = trainset.to_inner_uid(user_rid) # e.g. the user raw id is '500' -> string, while the user inner is 499 -> integer (used by surprise)
+    user_ratings =  trainset.ur[user_iid] 
+    watched = []
+    for item_iid, _ in user_ratings:
+        watched.append(trainset.to_raw_iid(item_iid))
+    for movieId in movieID_to_name:
+        if not movieId in watched:
+            uid, iid, true_r, est, details = algo.predict(user_rid, str(movieId))
+            predictions[movieId] = est
 
-    watched = {}
-    for itemID, rating in trainset.ur[user_iid]:
-        watched[itemID] = 1
-
+    pred_list = list(predictions.items())   
+    random.shuffle(pred_list) 
+    pred_shuffled = dict(pred_list)
+    pred_sorted = sorted(pred_shuffled.items(), key=lambda x: x[1], reverse=True)
+ 
     recommendations = []
-
-    position = 0 
-    for itemID, _ in sorted(candidates.items(), key=itemgetter(1), reverse=True):
-        if not itemID in watched:
-            recommendations.append(get_movie_name(trainset.to_raw_iid(itemID), movieID_to_name))
-            position += 1
-            if position > 10: break
+    for movieId, _ in pred_sorted[:k]:
+        title = get_movie_name(movieId, movieID_to_name)
+        recommendations.append(title)
 
     return recommendations
+        
 
 
 if __name__=='__main__': 
     pass
+        

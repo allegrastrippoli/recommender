@@ -52,15 +52,15 @@ def create_app():
     def get_recommendations():
         if request.method == "POST":
             selected_movies= request.form.getlist('selected_movies')
-            insert_rating(int(current_user.id), selected_movies, "5.0")
+            insert_rating(int(current_user.id), selected_movies)
             print('Done inserting user ratings.')
             titles = get_top_k_recommendations(str(current_user.id))
             recs = select_movie_from_title(titles)
             return render_template("recommendations.html", recs=recs)
         
 
-    @app.route('/')
-    @login_required    
+    @app.route('/')  
+    @login_required  
     def init():
         id = current_user.id
         if check_if_user_has_ratings(int(id)):

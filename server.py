@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import login_required, UserManager, UserMixin
 from repository import select_random_movies, check_if_user_has_ratings, insert_rating, select_movie_from_title
-from recommender import get_top_k_recommendations
+from recommender import get_top_n_rec
 
 class ConfigClass(object):
     """ Flask application config """
@@ -54,7 +54,7 @@ def create_app():
             selected_movies= request.form.getlist('selected_movies')
             insert_rating(int(current_user.id), selected_movies)
             print('Done inserting user ratings.')
-            titles = get_top_k_recommendations(str(current_user.id))
+            titles = get_top_n_rec(str(current_user.id))
             recs = select_movie_from_title(titles)
             return render_template("recommendations.html", recs=recs)
         
@@ -64,7 +64,7 @@ def create_app():
     def init():
         id = current_user.id
         if check_if_user_has_ratings(int(id)):
-            titles = get_top_k_recommendations(str(id))
+            titles = get_top_n_rec(str(id))
             recs = select_movie_from_title(titles)
             return render_template("recommendations.html", recs=recs)
         else:

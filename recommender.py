@@ -33,7 +33,7 @@ def load_dataset():
     return Dataset.load_from_file( 'ml-latest-small/ratings.csv', reader=reader)
     
 
-def get_top_k_recommendations(user_rid: str, k=20):
+def get_top_n_rec(user_rid: str, n=20):
     movieID_to_name = get_movies_dict()
     dataset = load_dataset()
     trainset = dataset.build_full_trainset() # the trainset is built from the whole dataset 
@@ -58,7 +58,7 @@ def get_top_k_recommendations(user_rid: str, k=20):
     pred_sorted = sorted(pred_shuffled.items(), key=lambda x: x[1], reverse=True)
  
     recommendations = []
-    for movieId, _ in pred_sorted[:k]:
+    for movieId, _ in pred_sorted[:n]:
         title = get_movie_name(movieId, movieID_to_name)
         recommendations.append(title)
 

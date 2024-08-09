@@ -54,4 +54,14 @@
         </div>
     </div>
 </form>
+<script>
+    function validateForm() {
+        var checkboxes = document.querySelectorAll('input[name="selected_movies"]:checked');
+        if (checkboxes.length < 10) {
+            alert("Please select at least 10 movies.");
+            return false;
+        }
+        return true;
+    }
+</script>
 {% endblock %}

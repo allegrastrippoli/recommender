@@ -1,0 +1,671 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Sistema di raccomandazione di film
+\end_layout
+
+\begin_layout Author
+Allegra Strippoli,
+ 548288
+\end_layout
+
+\begin_layout Subsection*
+Abstract
+\end_layout
+
+\begin_layout Standard
+Questo documento è il report relativo al progetto per il corso di Sistemi Intelligenti Per Internet.
+ È stata realizzata una web app che integra un sistema di raccomandazione di film.
+ Agli utenti appena registrati viene chiesto di assegnare un punteggio (da uno a cinque) a dei film scelti randomicamente tra quelli presenti nel dataset 
+\series bold
+ml-latest-small
+\series default
+.
+ Dopo aver selezionato almeno dieci di questi,
+ viene utilizzata la libreria 
+\series bold
+Surprise
+\series default
+ per fornire raccomandazioni.
+ L'approccio adottato è 
+\series bold
+collaborative filtering item-based nearest-neighbor
+\series default
+,
+ per cui la similarità viene calcolata tra items,
+ non tra utenti.
+ Per ogni oggetto,
+ si selezionano dei vicini (neighbors) sulla base di una metrica di similarità.
+ In particolare,
+ si costruisce una matrice di similarità (similarity matrix) dove ogni elemento rappresenta la similarità tra due oggetti e si selezionano come vicini quelli con i punteggi più alti.
+ Infine,
+ si effettuano le predizioni,
+ ossia si calcola un possibile rating che un utente potrebbe assegnare ad un oggetto che non ha ancora valutato.
+ Gli obiettivi del progetto sono descritti brevemente:
+\end_layout
+
+\begin_layout Enumerate
+Affrontare il problema delle raccomandazioni in uno scenario reale.
+\end_layout
+
+\begin_layout Enumerate
+Affrontare il cold start problem.
+\end_layout
+
+\begin_layout Enumerate
+Studiare e utilizzare la libreria Surprise per ottenere raccomandazioni in tempo reale.
+\end_layout
+
+\begin_layout Enumerate
+Realizzare una web app che fornisca un'interfaccia all'utente e gestisca la persistenza dei dati.
+\end_layout
+
+\begin_layout Standard
+Link github:
+ 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/allegrastrippoli/recommender.git
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Dataset
+\end_layout
+
+\begin_layout Standard
+Il dataset ml-latest-small descrive le valutazioni a 5 stelle di MovieLens,
+ un servizio di raccomandazione cinematografica.
+ Contiene 100.836 valutazioni su 9.742 film da parte di 610 utenti.
+ Il dataset,
+ oltre ad essere chiaro e accessibile,
+ è di dimensioni sufficientemente grandi da permettere un'analisi significativa,
+ ma anche abbastanza piccolo da essere gestito senza richiedere risorse computazionali eccessive.
+ Infine,
+ trattandosi di un dataset noto in letteratura,
+ è possibile trovare numerosi esempi sul web,
+ che ne facilitano l'analisi e l'utilizzo.
+ Fondamentale è il file rating.csv,
+ che ha header 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+texttt{userId,
+ movieId,
+ rating}
+\end_layout
+
+\end_inset
+
+;
+ e ogni riga rappresenta la valutazione che un utente ha attribuito ad un film con un certo id.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Surprise 
+\end_layout
+
+\begin_layout Standard
+Surprise è una libreria costruita con lo scopo di costruire e analizzare sistemi di raccomandazione.
+ Nel progetto è stata utilizzata per svolgere la seguenti operazioni:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Caricamento del dataset.
+ 
+\series default
+Le valutazioni degli utenti contenute nel file rating.csv rappresentano il training set,
+ e sono state caricate utilizzando la classe Trainset di Surprise.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Definizione di un algoritmo di predizione e similarità.
+ 
+\series default
+È stato definito un algoritmo per il calcolo della similarità e per effettuare le predizioni.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+La previsione dello score di un utente 
+\begin_inset Formula $u$
+\end_inset
+
+ relativo ad un item 
+\begin_inset Formula $i$
+\end_inset
+
+ (
+\begin_inset Formula $\hat{r_{ui}}$
+\end_inset
+
+) è calcolato come:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{r_{ui}}=\frac{\underset{j\in N_{k}(i)}{\sum}sim(i,j)*r_{uj}}{\underset{j\in N_{k}(i)}{\sum}sim(i,j)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $k$
+\end_inset
+
+ is the number of neighbors.
+ (Default is 40).
+\end_layout
+
+\begin_layout Standard
+La similarità tra due items 
+\begin_inset Formula $i,j$
+\end_inset
+
+ invece viene calcolata utilizzando la cosine similarity:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+sim(i,j)=\frac{\underset{u\in U_{ij}}{\sum}r_{ui}*r_{uj}}{\sqrt{\underset{u\in U_{ij}}{\sum}r_{ui}^{2}}*\sqrt{\underset{u\in U_{ij}}{\sum}r_{uj}^{2}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Calcolo delle predizioni.
+ 
+\series default
+Dato 
+\begin_inset Formula $u$
+\end_inset
+
+ come utente corrente,
+ vengono predetti gli score di tutti i film che non sono stati valutati da 
+\begin_inset Formula $u$
+\end_inset
+
+.
+ Questo è possibile applicando il metodo 
+\begin_inset Formula $predict$
+\end_inset
+
+ a tutte le coppie 
+\begin_inset Formula $(u,i)$
+\end_inset
+
+ con 
+\begin_inset Formula $i\notin R_{u}$
+\end_inset
+
+ (insieme di ratings di 
+\begin_inset Formula $u$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Calcolo dell'accuracy.
+ 
+\series default
+Viene calcolato il Root Mean Squared Error (RMSE):
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+RMSE=\sqrt{\frac{1}{|\hat{R}|}\underset{\hat{r_{ui}}\in\hat{R}}{\sum}(r_{ui}*\hat{r_{ui}})^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection*
+Implementazione e risultati
+\end_layout
+
+\begin_layout Standard
+Le raccomandazioni sono rappresentate da film che hanno un alto punteggio 
+\begin_inset Formula $\hat{r_{ui}}$
+\end_inset
+
+.
+ Per evitare che l'ordinamento sia influenzato dal 
+\begin_inset Formula $movieId$
+\end_inset
+
+ (ad esempio,
+ i film con ID più basso hanno maggiore probabilità di essere raccomandati),
+ viene applicata un'operazione di shuffling.
+ La maggior parte delle operazioni,
+ come la ricerca dei vicini e il calcolo della matrice di similarità,
+ è gestita da Surprise in modo trasparente.
+ Oltre ad essere ben documentata,
+ la libreria sembra uno strumento efficace e semplice da utilizzare.
+ L'unico problema riscontrato è legato all'impossibilità di aggiungere valutazioni in tempo reale al trainset una volta creato.
+ Questo obbliga a ripetere le operazioni di build e fit per ogni nuovo rating.
+ I test sull'accuratezza sono stati eseguiti a campione su utenti creati ad hoc,
+ quindi senza creare un vero e proprio test set.
+ Alcuni utenti ottengono un RMSE vicino allo zero,
+ il che è incoraggiante;
+ tuttavia,
+ utenti con un quadro di valutazioni più complesso presentano RMSE più alti (circa 1).
+ Per ridurre questo valore,
+ è possibile aumentare la soglia del numero di valutazioni necessarie per utente oppure utilizzare tecniche di raccomandazione più avanzate.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{6cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Web app
+\end_layout
+
+\begin_layout Standard
+Quando l'utente si registra,
+ gli viene assegnato un 
+\begin_inset Formula $id$
+\end_inset
+
+ univoco,
+ questo 
+\begin_inset Formula $id$
+\end_inset
+
+ è necessario per tenere traccia degli score che l'utente assegnerà ai film.
+ L'autenticazione è stata gestita utilizzando un template offerto da Flask,
+ che memorizza gli username e gli hash delle password in un database sqlite.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment center
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Screenshot 2024-08-09 at 12.09.40.png
+	lyxscale 25
+	scale 15
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Registrazione
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il cold start problem si verifica quando un nuovo utente si registra sulla piattaforma,
+ ed il sistema di raccomandazione non sa quali articoli consigliargli,
+ poiché i dati storici disponibili su di lui sono pochi o inesistenti.
+ Per questo motivo,
+ ogni nuovo utente ha la possibilità di valutare alcuni film,
+ assegnando da una a cinque stelle.
+ Il criterio con cui vengono selezionati è randomico,
+ dunque titolo,
+ genere o anno di uscita del film non sono influenti ai fini della scelta.
+ Quando viene caricata la pagina,
+ viene formulata una query al database (movies.sqlite) che restituisce venti film casuali.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment center
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Screenshot 2024-08-09 at 11.36.28.png
+	lyxscale 25
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Un utente assegna degli score a dei film
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se l'utente valuta un numero insufficiente di film e preme il bottone submit,
+ compare un pop up che gli impedisce di procedere.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment center
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Screenshot 2024-08-09 at 11.41.48.png
+	lyxscale 25
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pop up
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se invece l'operazione di submit va a buon fine,
+ i ratings dell'utente vengono scritti sul database e ha inizio il processo di raccomandazione,
+ che si conclude quando vengono mostrati i film proposti all'utente.
+ Come citato in precedenza,
+ l'applicazione è stata realizzata con Flask,
+ per gestire il database è stato utilizzato il toolkit SQLAlchemy,
+ mentre per il front-end è stato utilizzato Bootstrap.
+ Infine,
+ le immagini sono state recuperate tramite richieste all'API Omdbapi.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment center
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Screenshot 2024-08-09 at 11.58.06.png
+	lyxscale 25
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Raccomandazioni
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+@article{10.1145/2827872,
+ author = {Harper,
+ F.
+ Maxwell and Konstan,
+ Joseph A.},
+ title = {The MovieLens Datasets:
+ History and Context},
+ year = {2015},
+ issue_date = {January 2016},
+ publisher = {Association for Computing Machinery},
+ address = {New York,
+ NY,
+ USA},
+ volume = {5},
+ number = {4},
+ issn = {2160-6455},
+ url = {https://doi.org/10.1145/2827872},
+ doi = {10.1145/2827872},
+ abstract = {The MovieLens datasets are widely used in education,
+ research,
+ and industry.
+ They are downloaded hundreds of thousands of times each year,
+ reflecting their use in popular press programming books,
+ traditional and online courses,
+ and software.
+ These datasets are a product of member activity in the MovieLens movie recommendation system,
+ an active research platform that has hosted many experiments since its launch in 1997.
+ This article documents the history of MovieLens and the MovieLens datasets.
+ We include a discussion of lessons learned from running a long-standing,
+ live research platform from the perspective of a research organization.
+ We document best practices and limitations of using the MovieLens datasets in new research.},
+ journal = {ACM Trans.
+ Interact.
+ Intell.
+ Syst.},
+ month = {dec},
+ articleno = {19},
+ numpages = {19},
+ keywords = {Datasets,
+ MovieLens,
+ ratings,
+ recommendations} 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "key-2"
+literal "false"
+
+\end_inset
+
+@article{Hug2020,
+ doi = {10.21105/joss.02174},
+ url = {https://doi.org/10.21105/joss.02174},
+ year = {2020},
+ publisher = {The Open Journal},
+ volume = {5},
+ number = {52},
+ pages = {2174},
+ author = {Nicolas Hug},
+ title = {Surprise:
+ A Python library for recommender systems},
+ journal = {Journal of Open Source Software}}
+\end_layout
+
+\end_body
+\end_document

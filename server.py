@@ -13,7 +13,6 @@ class ConfigClass(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///users.sqlite'    
     SQLALCHEMY_TRACK_MODIFICATIONS = False   
  
-    USER_APP_NAME = "Recommender"     
     USER_ENABLE_EMAIL = False     
     USER_ENABLE_USERNAME = True   
     USER_REQUIRE_RETYPE_PASSWORD = False  

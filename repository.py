@@ -213,4 +213,4 @@ def delete_user_rating(id: int):
 if __name__=='__main__':
     # create_movie_table("ml-latest-small/movies.csv")
     # create_rating_table("ml-latest-small/ratings.csv")
-    retrieve_images()
+    pass

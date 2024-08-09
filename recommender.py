@@ -4,12 +4,6 @@ from surprise import KNNBasic
 import random
 import csv
 
-def test_accuracy(algo, trainset):
-    testset = trainset.build_testset()
-    predictions = algo.test(testset)
-    accuracy.rmse(predictions, verbose=True) 
-   
-
 def get_movie_name(movieID, movieID_to_name):
         if int(movieID) in movieID_to_name:
             return movieID_to_name[int(movieID)]
@@ -64,7 +58,27 @@ def get_top_n_rec(user_rid: str, n=20):
 
     return recommendations
         
+def get_accuracy(user_rid: str):
+    dataset = load_dataset()
+    trainset = dataset.build_full_trainset()
+    algo = KNNBasic(sim_options={'name': 'cosine', 'user_based': False})
+    algo.fit(trainset)
 
+    predictions = []
+
+    user_iid = trainset.to_inner_uid(user_rid) 
+    user_ratings =  trainset.ur[user_iid] 
+    
+    watched = []
+    for item_iid, rating in user_ratings:
+        watched.append((trainset.to_raw_iid(item_iid), rating))  
+
+    for movieId, actual_rating in watched:
+        pred = algo.predict(user_rid, str(movieId), r_ui=actual_rating)
+        predictions.append(pred)
+
+    accuracy.rmse(predictions, verbose=True) 
+   
 
 if __name__=='__main__': 
     pass

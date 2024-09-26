@@ -210,8 +210,12 @@ Surprise
 \end_layout
 
 \begin_layout Standard
-Surprise è una libreria costruita con lo scopo di costruire e analizzare sistemi di raccomandazione.
- Nel progetto è stata utilizzata per svolgere la seguenti operazioni:
+Surprise è una libreria che ha lo scopo di costruire e analizzare sistemi di raccomandazione.
+ 
+\end_layout
+
+\begin_layout Standard
+Nel progetto è stata utilizzata per svolgere la seguenti operazioni:
 \end_layout
 
 \begin_layout Itemize
@@ -266,8 +270,8 @@ La previsione dello score di un utente
 \begin_inset Formula $k$
 \end_inset
 
- is the number of neighbors.
- (Default is 40).
+ è il numero di vicini.
+ Default=40.
 \end_layout
 
 \begin_layout Standard
@@ -287,6 +291,42 @@ sim(i,j)=\frac{\underset{u\in U_{ij}}{\sum}r_{ui}*r_{uj}}{\sqrt{\underset{u\in U
 \end_inset
 
 
+\end_layout
+
+\begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $U_{ij}$
+\end_inset
+
+ sono
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ gli utenti che hanno dato uno score a entrambi gli item.
+ 
 \end_layout
 
 \end_deeper
@@ -357,17 +397,106 @@ Le raccomandazioni sono rappresentate da film che hanno un alto punteggio
 \end_inset
 
 .
- Per evitare che l'ordinamento sia influenzato dal 
+ Per evitare che il risultato dell'algoritmo sia influenzato dal 
 \begin_inset Formula $movieId$
 \end_inset
 
  (ad esempio,
  i film con ID più basso hanno maggiore probabilità di essere raccomandati),
  viene applicata un'operazione di shuffling.
- La maggior parte delle operazioni,
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La maggior parte delle operazioni,
  come la ricerca dei vicini e il calcolo della matrice di similarità,
  è gestita da Surprise in modo trasparente.
- Oltre ad essere ben documentata,
+ I moduli della libreria che sono stati utilizzati sono:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Algorithm base class:
+
+\series default
+ ogni algoritmo di predizione eredita i metodi di questa classe.
+ Tra i metodi più rilevanti ci sono:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Fit:
+ che permette di addestrare un algoritmo su di uno specifico training set.
+\end_layout
+
+\begin_layout Itemize
+Predict:
+ che calcola la previsione per una coppia 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+texttt{utente,
+ item}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+KNN algorithms:
+ 
+\series default
+comprende vari algoritmi di predizione.
+ Alcuni esempi sono:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Basic:
+ utilizzato in questo progetto e descritto in precedenza per calcolare 
+\begin_inset Formula $\hat{r_{ui}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+With means:
+ tiene conto della media dei rating dell'utente.
+\end_layout
+
+\begin_layout Itemize
+With Z-Score:
+ tiene conto della media e della deviazione standard.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Similarities module:
+
+\series default
+ comprende tecniche per calcolare la similarità,
+ tra cui Pearsons e Cosine Similarity.
+\end_layout
+
+\begin_layout Standard
+Oltre ad essere ben documentata,
  la libreria sembra uno strumento efficace e semplice da utilizzare.
  L'unico problema riscontrato è legato all'impossibilità di aggiungere valutazioni in tempo reale al trainset una volta creato.
  Questo obbliga a ripetere le operazioni di build e fit per ogni nuovo rating.

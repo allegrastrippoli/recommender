@@ -32,7 +32,7 @@ def get_top_n_rec(user_rid: str, n=20):
     dataset = load_dataset()
     trainset = dataset.build_full_trainset() # the trainset is built from the whole dataset 
     algo = KNNBasic(sim_options={'name': 'cosine', 'user_based': False})
-    algo.fit(trainset)
+    algo.fit(trainset) 
 
     predictions = {}
 
@@ -50,7 +50,7 @@ def get_top_n_rec(user_rid: str, n=20):
     random.shuffle(pred_list) 
     pred_shuffled = dict(pred_list)
     pred_sorted = sorted(pred_shuffled.items(), key=lambda x: x[1], reverse=True)
- 
+
     recommendations = []
     for movieId, _ in pred_sorted[:n]:
         title = get_movie_name(movieId, movieID_to_name)
@@ -81,5 +81,8 @@ def get_accuracy(user_rid: str):
    
 
 if __name__=='__main__': 
+    # get_accuracy('13')
+    # get_top_n_rec('13')
     pass
+    
         

@@ -553,6 +553,8 @@ Se invece l'operazione di submit va a buon fine,
  l'applicazione è stata realizzata con Flask,
  per gestire il database è stato utilizzato il toolkit SQLAlchemy,
  mentre per il front-end è stato utilizzato Bootstrap.
+ Infine,
+ le immagini sono state recuperate tramite richieste all'API Omdbapi.
 \end_layout
 
 \begin_layout Standard

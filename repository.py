@@ -124,6 +124,13 @@ def select_random_movies():
     result = session.execute(stmt).scalars().all()
     return result
 
+
+def select_random_movies_not_rated(userId: int):
+    stmt = select(Movie).where(~Movie.movieId.in_(select(Rating.movieId).where(Rating.userId == userId))).order_by(func.random()).limit(20)
+    result = session.execute(stmt).scalars().all()
+    return result
+
+
 def create_movie_table(filepath):
     csv_data = pd.read_csv(filepath)
     csv_data = csv_data.values.tolist()
@@ -197,8 +204,11 @@ def delete_user_ratings(from_id: int, to_id: int):
     id: database id, NOT userId
     """
     for id in range(from_id, to_id):
-        rating = session.get(Rating, id)
-        session.delete(rating)
+        try:
+            rating = session.get(Rating, id)
+            session.delete(rating)
+        except:
+            continue
     session.commit()
 
 def delete_user_rating(id: int):
@@ -212,5 +222,7 @@ def delete_user_rating(id: int):
 
 if __name__=='__main__':
     # create_movie_table("ml-latest-small/movies.csv")
-    # create_rating_table("ml-latest-small/ratings.csv")
+    # create_rating_table("ml-latest-small/ratings.csv")   
+    # retrieve_images()
     pass
+    

@@ -1,6 +1,4 @@
-from surprise import accuracy, Dataset
-from surprise import Reader
-from surprise import KNNBasic
+from surprise import accuracy, Dataset, Reader, KNNBasic
 import random
 import csv
 
@@ -26,7 +24,6 @@ def load_dataset():
     reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
     return Dataset.load_from_file( 'ml-latest-small/ratings.csv', reader=reader)
     
-
 def get_top_n_rec(user_rid: str, n=20):
     movieID_to_name = get_movies_dict()
     dataset = load_dataset()
@@ -81,8 +78,10 @@ def get_accuracy(user_rid: str):
    
 
 if __name__=='__main__': 
-    # get_accuracy('13')
-    # get_top_n_rec('13')
+    # print(get_accuracy('13'))
+    # print(get_top_n_rec('13'))
     pass
+    
+    
     
         

@@ -110,7 +110,6 @@
           <ul class="nav justify-content-center border-bottom pb-3 mb-3">
             <li class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Start</a></li>
             <li class="nav-item"><a href="/recommendations" class="nav-link px-2 text-body-secondary">Recommendations</a></li>
-            <li class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Shuffle</a></li>
             <li class="nav-item"><a href="{{ url_for('user.register') }}" class="nav-link px-2 text-body-secondary">Register</a></li>
             {% if call_or_get(current_user.is_authenticated) %}
             <li class="nav-item"><a href="{{ url_for('user.edit_user_profile') }}" class="nav-link px-2 text-body-secondary">Profile</a></li>

@@ -70,8 +70,7 @@ def create_app():
         if action == 'get_recommendations':
             if request.method == "POST":
                 add_selected_movies()
-                print('DEBUG', len(session['selected_movies']), threshold)
-                if len(session['selected_movies']) >= threshold:
+                if len(session['selected_movies']) >= threshold or check_if_user_has_ratings(int(current_user.id)):
                     selected_movies= session['selected_movies']
                     insert_rating(int(current_user.id), selected_movies)
                     print('Done inserting user ratings.')
@@ -96,8 +95,6 @@ def create_app():
             return render_template("start.html", movies=movies, selected_movies=selected_movies)
 
         return "Invalid action", 40
-    
-    
     
     @app.route('/recommendations', methods=['GET', 'POST'])  
     @login_required  

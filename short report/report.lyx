@@ -124,15 +124,15 @@ Surprise
 collaborative filtering item-based nearest-neighbor
 \series default
 ,
- per cui la similarità viene calcolata tra items,
+ per cui la similarità viene calcolata tra film (items),
  non tra utenti.
  Per ogni oggetto,
  si selezionano dei vicini (neighbors) sulla base di una metrica di similarità.
  In particolare,
- si costruisce una matrice di similarità (similarity matrix) dove ogni elemento rappresenta la similarità tra due oggetti e si selezionano come vicini quelli con i punteggi più alti.
+ si costruisce una matrice di similarità dove ogni elemento rappresenta la similarità tra due oggetti e si selezionano come vicini quelli con i punteggi più alti.
  Infine,
  si effettuano le predizioni,
- ossia si calcola un possibile rating che un utente potrebbe assegnare ad un oggetto che non ha ancora valutato.
+ ossia si calcola un possibile rating che un utente potrebbe assegnare ad un oggetto che non ha ancora visto.
  Gli obiettivi del progetto sono descritti brevemente:
 \end_layout
 
@@ -205,12 +205,269 @@ texttt{userId,
  
 \end_layout
 
+\begin_layout Standard
+\begin_inset Float table
+placement H
+alignment center
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+user Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+movie Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+rating
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+1 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+1739
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+3908
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+1 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+2130
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+tre righe del file rating.csv
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection*
 Surprise 
 \end_layout
 
 \begin_layout Standard
-Surprise è una libreria che ha lo scopo di costruire e analizzare sistemi di raccomandazione.
+Surprise è una libreria che ha lo scopo di costruire e gestire sistemi di raccomandazione.
  
 \end_layout
 
@@ -224,8 +481,11 @@ Nel progetto è stata utilizzata per svolgere la seguenti operazioni:
 Caricamento del dataset.
  
 \series default
-Le valutazioni degli utenti contenute nel file rating.csv rappresentano il training set,
- e sono state caricate utilizzando la classe Trainset di Surprise.
+Le valutazioni degli utenti contenute nel file rating.csv rappresentano il ``training set''.
+ Un algoritmo item-based nearest-neighbor viene ``addestrato'' sul training set.
+ L'addestramento,
+ in questo caso,
+ consiste nel costruire una matrice di similarità tra film.
 \end_layout
 
 \begin_layout Itemize
@@ -234,13 +494,45 @@ Le valutazioni degli utenti contenute nel file rating.csv rappresentano il train
 Definizione di un algoritmo di predizione e similarità.
  
 \series default
-È stato definito un algoritmo per il calcolo della similarità e per effettuare le predizioni.
+Surprise mette a disposizione degli algoritmi per il calcolo della similarità e per effettuare le predizioni.
  
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-La previsione dello score di un utente 
+La previsione dello score 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\hat{r_{ui}}$
+\end_inset
+
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+di un utente 
 \begin_inset Formula $u$
 \end_inset
 
@@ -248,11 +540,7 @@ La previsione dello score di un utente
 \begin_inset Formula $i$
 \end_inset
 
- (
-\begin_inset Formula $\hat{r_{ui}}$
-\end_inset
-
-) è calcolato come:
+ è calcolato come:
 \end_layout
 
 \begin_layout Standard
@@ -267,11 +555,44 @@ La previsione dello score di un utente
 \end_layout
 
 \begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $N_{k}(i)$
+\end_inset
+
+ sono gli item vicini d 
+\begin_inset Formula $i$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
 \begin_inset Formula $k$
 \end_inset
 
  è il numero di vicini.
- Default=40.
+ Nella configurazione di default k 
+\begin_inset Formula $\in$
+\end_inset
+
+ 
+\begin_inset Formula $[1,40]$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -279,7 +600,9 @@ La similarità tra due items
 \begin_inset Formula $i,j$
 \end_inset
 
- invece viene calcolata utilizzando la cosine similarity:
+,
+ invece,
+ viene calcolata utilizzando la cosine similarity:
 \end_layout
 
 \begin_layout Standard
@@ -363,6 +686,9 @@ Dato
 \end_inset
 
 ).
+ In questa applicazione,
+ le predizioni vengono ordinate in modo decrescente rispetto allo score,
+ e vengono restituiti i top-20 film.
 \end_layout
 
 \begin_layout Itemize
@@ -414,7 +740,7 @@ Le raccomandazioni sono rappresentate da film che hanno un alto punteggio
 \begin_layout Standard
 La maggior parte delle operazioni,
  come la ricerca dei vicini e il calcolo della matrice di similarità,
- è gestita da Surprise in modo trasparente.
+ viene gestita da Surprise.
  I moduli della libreria che sono stati utilizzati sono:
 \end_layout
 
@@ -430,12 +756,12 @@ Algorithm base class:
 
 \begin_deeper
 \begin_layout Itemize
-Fit:
+fit:
  che permette di addestrare un algoritmo su di uno specifico training set.
 \end_layout
 
 \begin_layout Itemize
-Predict:
+predict:
  che calcola la previsione per una coppia 
 \begin_inset ERT
 status open
@@ -466,7 +792,7 @@ comprende vari algoritmi di predizione.
 
 \begin_deeper
 \begin_layout Itemize
-Basic:
+base:
  utilizzato in questo progetto e descritto in precedenza per calcolare 
 \begin_inset Formula $\hat{r_{ui}}$
 \end_inset
@@ -475,12 +801,12 @@ Basic:
 \end_layout
 
 \begin_layout Itemize
-With means:
+con media:
  tiene conto della media dei rating dell'utente.
 \end_layout
 
 \begin_layout Itemize
-With Z-Score:
+con z-score:
  tiene conto della media e della deviazione standard.
 \end_layout
 
@@ -498,32 +824,253 @@ Similarities module:
 \begin_layout Standard
 Oltre ad essere ben documentata,
  la libreria sembra uno strumento efficace e semplice da utilizzare.
- L'unico problema riscontrato è legato all'impossibilità di aggiungere valutazioni in tempo reale al trainset una volta creato.
- Questo obbliga a ripetere le operazioni di build e fit per ogni nuovo rating.
+ L'unico problema riscontrato è legato all'impossibilità di aggiungere valutazioni in tempo reale al training set una volta creato.
+ Questo obbliga a ripetere le operazioni di build e fit del trainset per ogni nuovo rating inserito dall'utente.
+ Un altro aspetto interessante riguarda la gestione degli id.
+ Per migliorare l'efficienza,
+ Surprise assegna degli 
+\begin_inset Formula $inner\;id$
+\end_inset
+
+ di tipo 
+\begin_inset Formula $int$
+\end_inset
+
+,
+ oltre ai 
+\begin_inset Formula $raw\;id$
+\end_inset
+
+ di tipo 
+\begin_inset Formula $string$
+\end_inset
+
+ provenienti dai dati originali.
  I test sull'accuratezza sono stati eseguiti a campione su utenti creati ad hoc,
- quindi senza creare un vero e proprio test set.
- Alcuni utenti ottengono un RMSE vicino allo zero,
- il che è incoraggiante;
- tuttavia,
- utenti con un quadro di valutazioni più complesso presentano RMSE più alti (circa 1).
- Per ridurre questo valore,
- è possibile aumentare la soglia del numero di valutazioni necessarie per utente oppure utilizzare tecniche di raccomandazione più avanzate.
+ senza creare un vero e proprio test set.
+ L'RMSE cade di solito in un intervallo tra 0 e 1.
+ Anche sulla documentazione di Surprise è presente il valore di RMSE relativo al dataset Movielens 100k.
+\begin_inset Newline newline
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+La predizione dell'utente che ha 
+\begin_inset Formula $id=13$
+\end_inset
+
+ relativo al film con 
+\begin_inset Formula $id=6572$
+\end_inset
+
+ ha la seguente forma:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+alignment center
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+user Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+internal Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+true value
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+predizione
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+neighbors
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+was_impossible
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+156706
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.8\bar{6}$
+\end_inset
 
 
-\backslash
-vspace{6cm}
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+False
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+esempio di predizione
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nell'implementazione corrente le predizioni vengono inserite in un dizionario che ha come chiave l'id del film e come valore il campo predizione.
+ L'ordinamento per trovare i top 20 film da raccomandare avviene a partire da questo dizionario.
+\end_layout
+
+\begin_layout Subsection*
+Database
+\end_layout
+
+\begin_layout Standard
+Sono state create tre tabelle:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+users:
+ 
+\series default
+per collezionare i dati delle utenze,
+ come username,
+ hash delle password.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+movie:
+ 
+\series default
+creato a partire dal file movies.csv,
+ contiene tutte le informazioni sui film,
+ come movie id,
+ titolo,
+ genere,
+ e url dell'immagine (se presente).
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+rating:
+ 
+\series default
+creato a partire dal file rating.csv,
+ e poi aggiornato con i nuovi rating dati dagli utenti.
 \end_layout
 
 \begin_layout Subsection*
@@ -594,7 +1141,8 @@ Il cold start problem si verifica quando un nuovo utente si registra sulla piatt
  genere o anno di uscita del film non sono influenti ai fini della scelta.
  Quando viene caricata la pagina,
  viene formulata una query al database (movies.sqlite) che restituisce venti film casuali.
- 
+ L'utente può utilizzare un bottone di ``shuffling'' per continuare a visualizzare nuovi film random,
+ finché non è soddisfatto.
 \end_layout
 
 \begin_layout Standard
@@ -680,7 +1228,7 @@ Se invece l'operazione di submit va a buon fine,
  che si conclude quando vengono mostrati i film proposti all'utente.
  Come citato in precedenza,
  l'applicazione è stata realizzata con Flask,
- per gestire il database è stato utilizzato il toolkit SQLAlchemy,
+ per gestire il database è stato utilizzato l'ORM SQLAlchemy,
  mentre per il front-end è stato utilizzato Bootstrap.
  Infine,
  le immagini sono state recuperate tramite richieste all'API Omdbapi.
@@ -794,6 +1342,26 @@ literal "false"
  title = {Surprise:
  A Python library for recommender systems},
  journal = {Journal of Open Source Software}}
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+@misc{https://www.sqlalchemy.org/blog/}
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-9"
+
+\end_inset
+
+@misc{https://getbootstrap.com/docs/5.3/examples/}
 \end_layout
 
 \end_body
